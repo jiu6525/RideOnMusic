@@ -1,6 +1,7 @@
 import PlannerView from "@/views/PlannerView.vue";
 import onlyAuthUser from "@/assets/js/onlyAuthUser.js";
 
+
 export default [
   {
     path: "/plan",
@@ -11,6 +12,12 @@ export default [
       {
         path: "regist",
         name: "plannerRegister",
+        component: () => import("@/components/plan/PlannerRegister.vue"),
+        beforeEnter: onlyAuthUser,
+      },
+      {
+        path: "regist/joinPlan",
+        name: "plannerRegisterJoin",
         component: () => import("@/components/plan/PlannerRegister.vue"),
         beforeEnter: onlyAuthUser,
       },

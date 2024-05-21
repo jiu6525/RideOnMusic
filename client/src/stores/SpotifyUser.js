@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import axios from "axios";
 import store from "@/stores";
-const { VITE_NODE_EXPRESS_URI } = import.meta.env;
+const { VITE_NODE_EXPRESS_URI } = import.meta.env
 
 export const useUserStore = defineStore(
   "user",
@@ -15,25 +15,23 @@ export const useUserStore = defineStore(
 
     const getUserProfile = async () => {
       axios
-        .post(`${VITE_NODE_EXPRESS_URI}/spotify/userprofile`, {
-          accessToken: tokenStore.accessToken,
-        })
+        .post(`${VITE_NODE_EXPRESS_URI}/userprofile`, { accessToken: tokenStore.accessToken })
         .then((res) => {
           profile.value = res.data;
           // console.log(res.data)
         })
         .then(() => {
-          getUserPlaylists();
+          getUserPlaylists()
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error)
         });
     };
 
     const getUserPlaylists = async () => {
       console.log(profile.value.userId);
       axios
-        .post(`${VITE_NODE_EXPRESS_URI}/spotify/getUserPlaylists`, {
+        .post(`${VITE_NODE_EXPRESS_URI}/getUserPlaylists`, {
           accessToken: tokenStore.accessToken,
           id: profile.value.userId,
         })
