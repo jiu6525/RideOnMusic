@@ -1,9 +1,12 @@
 <script setup>
 import { watch } from "vue";
 import store from "@/stores";
-import { storeToRefs } from "pinia";
+import { storeToRefs } from 'pinia';
 
-const emit = defineEmits(["add-track"]);
+const trackStore = store.useTrackStore();
+const playlistStore = store.usePlaylistStore();
+
+const emit=defineEmits(["addTrack"])
 const props = defineProps({
   trackID: {
     type: String,
@@ -15,18 +18,24 @@ const props = defineProps({
   },
 });
 
-const addTracke = () => {
-  emit("add-track");
+const addTrack = () => {
+  // playlistStore.addtracks(props.uri);
+  // trackStore.addTrack(props.uri);
+  emit.addTrack()
 };
+
 </script>
 <template>
-  <div class="track-addition" style="width: 40px">
-    <i
-      class="bi bi-plus-circle"
-      style="font-size: 2rem"
-      @click="addTracke"
+  <div class="track-addition">
+    <button
+      @click="addTrack"
+      class="track-addition__button"
       title="Save to your library"
-    ></i>
+    >
+      추가
+      <!-- <icon name="plus" /> -->
+    </button>
+
   </div>
 </template>
 

@@ -18,9 +18,9 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.CLIENT_SECRET,
 });
 // SECTION - token
-app.post("/spotify/refresh", (req, res) => {
+app.post("/refresh", (req, res) => {
   const refreshToken = req.body.refreshToken;
-  spotifyApi.setRefreshToken(refreshToken);
+  spotifyApi.setRefreshToken(refreshToken)
   spotifyApi
     .refreshAccessToken()
     .then((data) => {
@@ -35,9 +35,10 @@ app.post("/spotify/refresh", (req, res) => {
     });
 });
 
-app.post("/spotify/login", (req, res) => {
+app.post("/login", (req, res) => {
+
   const code = req.body.code;
-  console.log(process.env.REDIRECT_URI);
+
   spotifyApi
     .authorizationCodeGrant(code)
     .then((data) => {
@@ -48,8 +49,7 @@ app.post("/spotify/login", (req, res) => {
       });
     })
     .catch((err) => {
-      // res.sendStatus(400);
-      console.log(err);
+      res.sendStatus(400);
     });
 });
 // app.get('/callback', (req, res) => {
@@ -74,7 +74,7 @@ app.post("/spotify/login", (req, res) => {
 // });
 
 // SECTION - user info
-app.post("/spotify/userprofile", (req, res) => {
+app.post("/userprofile", (req, res) => {
   const accessToken = req.body.accessToken;
 
   spotifyApi.setAccessToken(accessToken);
@@ -99,27 +99,25 @@ app.post("/spotify/userprofile", (req, res) => {
 });
 
 // SECTION - playlist
-app.post("/spotify/createPlaylist", (req, res) => {
+app.post("/createPlaylist", (req, res) => {
   const name = req.body.name;
   const description = req.body.description;
   const accessToken = req.body.accessToken;
 
   spotifyApi.setAccessToken(accessToken);
 
-  spotifyApi
-    .createPlaylist(name, { description: description, public: true, collaborative: true })
-    .then(
-      function (data) {
-        console.log("Created playlist!");
-        res.json(data.body);
-      },
-      function (err) {
-        console.log("Something went wrong!", err);
-      }
-    );
+  spotifyApi.createPlaylist(name, { description: description, public: true, collaborative: true }).then(
+    function (data) {
+      console.log("Created playlist!");
+      res.json(data.body);
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
+  );
 });
 
-app.post("/spotify/getPlaylist", (req, res) => {
+app.post("/getPlaylist", (req, res) => {
   const playlistId = req.body.playlistId;
 
   const accessToken = req.body.accessToken;
@@ -137,7 +135,7 @@ app.post("/spotify/getPlaylist", (req, res) => {
   );
 });
 
-app.post("/spotify/getUserPlaylists", (req, res) => {
+app.post("/getUserPlaylists", (req, res) => {
   const id = req.body.id;
   // console.log("getUserPlaylist " + id);
 
@@ -156,7 +154,7 @@ app.post("/spotify/getUserPlaylists", (req, res) => {
   );
 });
 
-app.post("/spotify/addTracksToPlaylist", (req, res) => {
+app.post("/addTracksToPlaylist", (req, res) => {
   const tracks = req.body.tracks;
   const id = req.body.playlistId;
   const accessToken = req.body.accessToken;
@@ -174,32 +172,28 @@ app.post("/spotify/addTracksToPlaylist", (req, res) => {
   );
 });
 
-app.post("/spotify/UpdatePlaylistItems", (req, res) => {
-  const tracks = req.body.tracks; // tracks uris
+app.post("/UpdatePlaylistItems", (req, res) => {
+  const tracks = req.body.tracks;// tracks uris
   const id = req.body.playlistId;
   const accessToken = req.body.accessToken;
-  let url = `${process.env.SPOTIFY_API}/playlists/${id}/tracks?uris=${tracks}`;
-  console.log(url);
+  let url = `${process.env.SPOTIFY_API}/playlists/${id}/tracks?uris=${tracks}`
   fetch(url, {
     method: "PUT",
     headers: {
-      Authorization: "Bearer " + accessToken,
-    },
+      Authorization: 'Bearer ' + accessToken
+    }
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
-      res.json(data);
+      console.log(data)
+      res.json(data)
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(404);
-    });
+    .catch(err => console.log(err))
 });
 
 //!SECTION - search
 
-app.post("/spotify/search", (req, res) => {
+app.post("/search", (req, res) => {
   const accessToken = req.body.accessToken;
   const keyword = req.body.keyword;
   const offset = req.body.offset;

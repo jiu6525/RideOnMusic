@@ -9,17 +9,17 @@ import piniaPersistedState from "pinia-plugin-persistedstate";
 
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons";
-import "bootstrap-icons/font/bootstrap-icons.css";
 
 const app = createApp(App);
 
 const pinia = createPinia();
-// pinia.use(piniaPersist);
+pinia.use(piniaPersist);
 pinia.use(piniaPersistedState);
 
 app.use(pinia);
 app.use(router);
 app.use(Moveable);
+
+
 
 app.mount("#app");

@@ -1,5 +1,5 @@
 import { ref, reactive } from "vue";
-import { useRouter } from "vue-router";
+import router from "@/router";
 
 class ChatService {
   constructor() {
@@ -9,7 +9,9 @@ class ChatService {
 
   connect() {
     const webSocketUrl = import.meta.env.VITE_WEB_SOCKET_URL;
-    this.ws = new WebSocket(webSocketUrl);
+    // const memberId = sessionStorage.getItem('memberId');
+    const memberId = sessionStorage.getItem('memberId');
+    this.ws = new WebSocket(webSocketUrl + `?memberId=${memberId}`);
 
     this.ws.onmessage = (event) => {
       const message = event.data;
@@ -45,30 +47,47 @@ class ChatService {
     delete this.callbacks[id];
   }
 
-  _notifyCallbacks(message) {
-    Object.values(this.callbacks).forEach((callback) => callback(message));
+  _notifyCallbacks(message) { 
+    Object.values(this.callbacks).forEach((callback) => callback(message)); 
   }
 }
 
-const router = useRouter();
 const chatService = new ChatService();
-chatService.connect();
+chatService.connect()
 
 const addedPlaces = reactive([]);
 const places = ref([]);
 
-function handleSocketMessage(eventData) {
-  
-  if (eventData.type === 'path') {
-    addedPlaces.value = eventData.contents;
+const handleSocketMessage = (eventData) => { 
+  const fullPath = router.currentRoute.value.path;
+  const lastSegment = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+  if(lastSegment === 'joinPlan'){
+    if (eventData.type === 'path') {
+      addedPlaces.value = eventData.contents;
+    } else if (eventData.type === 'search') {
+      places.value = eventData.contents;
+    }else if (eventData.type === 'plan') {
+      router.push({ name: 'plannerlist' });
+    }
   }
-  // else if (eventData.type === 'plan') {
-  //   // router.push({ name: 'plannerlist' });
-  //   router.value.push({ name: 'plannerlist' });
-  // }
-  else if (eventData.type === 'search') {
-    places.value = eventData.contents;
-}
+
+  if (eventData.type === 'invite') {
+    console.log(eventData);
+    const inviteCheck = confirm(eventData.memberId + "(님) 의 초대 수락?");
+    if (inviteCheck) {
+      socket.send(JSON.stringify({ 
+        type: 'inviteJoin', 
+        memberId: eventData.memberId,
+        sendedPushMember: eventData.sendedPushMember,
+      }));
+    }
+  }
+   else if (eventData.type === 'push' || eventData.type === 'receiver') {
+    alert("초대 완료");
+    router.push({ name: 'plannerRegisterJoin' });
+  }else if(eventData.type === 'inviteError'){
+    alert(eventData.errorMsg);
+  }
 }
 
 const socket = chatService.ws;

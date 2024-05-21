@@ -2,8 +2,7 @@
 import { defineProps } from "vue";
 import store from "@/stores";
 
-import TrackAddition from "@/components/spotify/TrackAddition.vue";
-
+// import TrackAddition from "@/components/TrackAddition.vue";
 const trackStore = store.useTrackStore();
 
 const props = defineProps({
@@ -18,21 +17,20 @@ const addTrack = () => {
 </script>
 
 <template>
-  <div class="d-flex align-items-center" style="cursor: pointer; height: 200px">
-    <img :src="track.albumUrl" style="height: 64px; width: 64px" class="col" />
-    <div class="ml-3 col-8 textClass">
+  <div class="d-flex m-2 align-items-center" style="cursor: pointer">
+    <img :src="track.albumUrl" style="height: 64px; width: 64px" />
+    <div class="ml-3">
       <div>{{ track.title }}</div>
-      <div class="text-muted textClass">{{ track.artist }}</div>
+      <div class="text-muted">{{ track.artist }}</div>
     </div>
-    <TrackAddition @add-track="addTrack" class="col" />
+    <!-- <TrackAddition :trackID="track.id" :uri="track.uri" /> -->
+    <button
+      @click="addTrack"
+      class="track-addition__button"
+      title="Save to your library"
+    >
+      추가
+      <!-- <icon name="plus" /> -->
+    </button>
   </div>
 </template>
-
-<style scoped>
-.textClass {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  overflow: hidden;
-}
-</style>
