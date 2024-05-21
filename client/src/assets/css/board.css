@@ -1,0 +1,128 @@
+/* board 패키지에서 컨테이너 영역 잡는 css */
+.container {
+	margin-top: 150px; /* 상단 마진 설정 */
+	margin-bottom: 300px; /* 하단 마진 설정 */
+	padding: 20px; /* 내부 컨텐츠와의 공간을 위해 패딩 설정 가능 */
+}
+
+@media ( max-width : 600px) {
+	.container {
+		margin-top: 20px; /* 모바일 화면에서의 상단 마진 설정 */
+		margin-bottom: 20px; /* 모바일 화면에서의 하단 마진 설정 */
+		padding: 10px;
+	}
+}
+
+article-title {
+	text-decoration: none;
+}
+
+/* 전체 조회 컨테이너 */
+#list-container {
+	margin-top: 150px; /* 상단 마진 설정 */
+	margin-bottom: 100px; /* 하단 마진 설정 */
+	padding: 20px; /* 내부 컨텐츠와의 공간을 위해 패딩 설정 가능 */
+}
+
+html {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
+html::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera*/
+}
+/* 
+.comment-box {
+	border: 1px solid #ddd;
+	padding: 20px;
+	border-radius: 4px;
+	margin-bottom: 20px;
+	background-color: #f9f9f9;
+}
+
+.comment-box .form-label {
+	font-weight: bold;
+}
+
+.comment-box .form-control {
+	border: none;
+	border-bottom: 1px solid #ccc;
+	border-radius: 0;
+	box-shadow: none;
+	resize: none;
+}
+
+.comment-box .form-control:focus {
+	border-color: #007bff;
+}
+
+.comment-box .btn-primary {
+	color: #fff;
+	background-color: #007bff;
+	border-color: #007bff;
+}
+
+.comment-box .btn-primary:hover {
+	color: #fff;
+	background-color: #0056b3;
+	border-color: #004085;
+}
+
+.comment-box small.text-muted {
+	font-size: 0.875em;
+}
+ */
+/* 댓글 글자 수 카운팅 */
+/* .comment-box textarea {
+	outline: none;
+}
+
+.comment-box textarea::-webkit-input-placeholder {
+	font-style: italic;
+	color: #999;
+}
+
+.comment-box textarea:-moz-placeholder {
+	font-style: italic;
+	color: #999;
+}
+
+.comment-box textarea::-moz-placeholder {
+	font-style: italic;
+	color: #999;
+}
+
+.comment-box textarea:-ms-input-placeholder {
+	font-style: italic;
+	color: #999;
+}
+
+.comment-item {
+	padding: 10px;
+	border-bottom: 1px solid #ddd; 댓글 아래에 구분선
+}
+
+.comment-content {
+	padding: 10px;
+	background-color: #f9f9f9; 댓글 배경색
+}
+
+.comment-author {
+	font-weight: bold; 작성자 이름 굵게
+}
+
+.comment-mention {
+	color: #007bff; @멘션 색상
+	font-weight: bold; @멘션 굵게
+}
+
+.comment-text {
+	margin-top: 5px;
+}
+
+.comment-date {
+	font-size: 0.875em;
+	color: #888; 날짜 색상
+	margin-top: 10px;
+} */

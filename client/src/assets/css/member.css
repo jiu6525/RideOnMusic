@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+.input-form {
+	max-width: 680px;
+	margin-top: 80px;
+	padding: 32px;
+	background: #fff;
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	-webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+	-moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+	box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+}
+
+.container {
+	margin-top: 150px; /* 상단 마진 설정 */
+	margin-bottom: 250px; /* 하단 마진 설정 */
+	padding: 20px; /* 내부 컨텐츠와의 공간을 위해 패딩 설정 가능 */
+}
+
+@media ( max-width : 600px) {
+	.container {
+		margin-top: 20px; /* 모바일 화면에서의 상단 마진 설정 */
+		margin-bottom: 20px; /* 모바일 화면에서의 하단 마진 설정 */
+		padding: 10px;
+	}
+}
