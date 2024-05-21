@@ -1,27 +1,3 @@
-<!-- <script>
-import { defineComponent } from 'vue';
-import { addedPlaces } from '@/services/ChatService.js';
-import { VueDraggableNext } from 'vue-draggable-next';
-
-export default defineComponent({
-    components: {
-        VueDraggableNext
-    },
-    // setup() {
-    //     const removePlace = (idx) => {
-    //         const index = addedPlaces.value.findIndex(p => p.idx === idx);
-    //         if (index !== -1) {
-    //             addedPlaces.value.splice(index, 1);
-    //         }
-    //     };
-
-    //     return {
-    //         addedPlaces,
-    //         removePlace
-    //     };
-    // }
-});
-</script> -->
 <script setup>
 import { onMounted, onUpdated, ref, watch } from "vue";
 import { Axios } from '@/util/http-commons.js';
@@ -29,12 +5,19 @@ import { useRouter } from "vue-router";
 import {chatService, socket, handleSocketMessage, addedPlaces} from '@/services/ChatService.js';
 import { VueDraggableNext } from 'vue-draggable-next';
 
+import { storeToRefs } from "pinia";
+import store from "@/stores";
+import { useMemberStore } from "@/stores/memberStore.js";
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
+
 const router = useRouter(); 
 const props = defineProps({
     keyword: String,
     places: Object
 });
 
+const playlistStore = store.usePlaylistStore();
 
 const http = Axios();
 const markerImg = "/src/assets/img/marker7.png"
@@ -48,13 +31,14 @@ var positions = [];
 let map = null;
 var polyline; // 선을 담는 변수
 const file = ref();
-const form = ref({
-    planTitle: '',
-    startDate: '2024-04-05',
-    endDate: '2024-04-07',
-    transport: 'public',
-    thumbnail: null
-});
+const initialForm = {
+  planTitle: "",
+  startDate: "2024-04-05",
+  endDate: "2024-04-07",
+  transport: "public",
+  thumbnail: null,
+};
+const form = ref(initialForm);
 
 watch(() => props.places, (places) => {
     displayPlaces(places)
@@ -101,32 +85,43 @@ const addFile = async () => {
 
 //서버에 등록 요청
 const handleFormSubmit = async () => {
-    const formData = new FormData();
-    formData.append('planTitle', form.value.planTitle);
-    formData.append('startDate', form.value.startDate);
-    formData.append('endDate', form.value.endDate);
-    formData.append('transport', form.value.transport);
-    const contentIds = addedPlaces.value.map(place => place.contentId);
-    formData.append('selectedPlaces', contentIds);
-
-    displayFormData(formData);
-
-    if (form.value.thumbnail) {
-        formData.append('file', form.value.thumbnail);
-    }
-    try {
-        const response = await http.post(apiurl.value + "plan", formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-
-        socket.send(JSON.stringify({ 
-          type: 'plan', 
-        }));
-    } catch (error) {
-        console.error("Error submitting form:", error);
-    }
+  if (!addedPlaces.value) {
+    alert("추가된 장소가 없습니다.");
+    return;
+  }
+  console.log(console.log(userInfo.value.memberId));
+  const formData = new FormData();
+  formData.append("planTitle", form.value.planTitle);
+  formData.append("startDate", form.value.startDate);
+  formData.append("endDate", form.value.endDate);
+  formData.append("transport", form.value.transport);
+  formData.append("memberId", userInfo.value.memberId);
+  const contentIds = addedPlaces.value.map((place) => place.contentId);
+  formData.append("selectedPlaces", contentIds);
+  if (playlistStore.hasPlaylist) {
+    console.log(playlistStore.planPlaylistId);
+    formData.append("playlistId", playlistStore.planPlaylistId);
+  }
+  if (form.value.thumbnail) {
+    formData.append("file", form.value.thumbnail);
+  }
+  displayFormData(formData);
+  try {
+    const response = await http.post(apiurl.value + "plan", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    form.value = initialForm;
+    router.push({ name: "plannerlist" });
+    socket.send(
+      JSON.stringify({
+        type: "plan",
+      })
+    );
+  } catch (error) {
+    console.error("Error submitting form:", error);
+  }
 };
 
     socket.onmessage = (event) => {

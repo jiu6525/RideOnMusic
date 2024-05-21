@@ -1,16 +1,14 @@
 import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import bodyParser from "body-parser";
-// const lyricsFinder = require("lyrics-finder")
 import SpotifyWebApi from "spotify-web-api-node";
 
-dotenv.config();
-const app = express();
-app.use(cors());
-// body-parser 미들웨어 등록
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// dotenv.config();
+// const app = express();
+// router.use(cors());
+// // body-parser 미들웨어 등록
+// router.use(bodyParser.json());
+// router.use(bodyParser.urlencoded({ extended: true }));
+
+const router = express.Router();
 
 const spotifyApi = new SpotifyWebApi({
   redirectUri: process.env.REDIRECT_URI,
@@ -18,7 +16,7 @@ const spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.CLIENT_SECRET,
 });
 // SECTION - token
-app.post("/spotify/refresh", (req, res) => {
+router.post("/refresh", (req, res) => {
   const refreshToken = req.body.refreshToken;
   spotifyApi.setRefreshToken(refreshToken);
   spotifyApi
@@ -35,9 +33,9 @@ app.post("/spotify/refresh", (req, res) => {
     });
 });
 
-app.post("/spotify/login", (req, res) => {
+router.post("/login", (req, res) => {
   const code = req.body.code;
-  console.log(process.env.REDIRECT_URI);
+  // spotifyApi.setRedirectURI(process.env.REDIRECT_URI);
   spotifyApi
     .authorizationCodeGrant(code)
     .then((data) => {
@@ -52,7 +50,7 @@ app.post("/spotify/login", (req, res) => {
       console.log(err);
     });
 });
-// app.get('/callback', (req, res) => {
+// router.get('/callback', (req, res) => {
 //   const code = req.query.code;
 //   console.log("callback" + code)
 //   if (code) {
@@ -74,7 +72,7 @@ app.post("/spotify/login", (req, res) => {
 // });
 
 // SECTION - user info
-app.post("/spotify/userprofile", (req, res) => {
+router.post("/userprofile", (req, res) => {
   const accessToken = req.body.accessToken;
 
   spotifyApi.setAccessToken(accessToken);
@@ -99,7 +97,7 @@ app.post("/spotify/userprofile", (req, res) => {
 });
 
 // SECTION - playlist
-app.post("/spotify/createPlaylist", (req, res) => {
+router.post("/createPlaylist", (req, res) => {
   const name = req.body.name;
   const description = req.body.description;
   const accessToken = req.body.accessToken;
@@ -119,7 +117,7 @@ app.post("/spotify/createPlaylist", (req, res) => {
     );
 });
 
-app.post("/spotify/getPlaylist", (req, res) => {
+router.post("/getPlaylist", (req, res) => {
   const playlistId = req.body.playlistId;
 
   const accessToken = req.body.accessToken;
@@ -137,7 +135,7 @@ app.post("/spotify/getPlaylist", (req, res) => {
   );
 });
 
-app.post("/spotify/getUserPlaylists", (req, res) => {
+router.post("/getUserPlaylists", (req, res) => {
   const id = req.body.id;
   // console.log("getUserPlaylist " + id);
 
@@ -156,7 +154,7 @@ app.post("/spotify/getUserPlaylists", (req, res) => {
   );
 });
 
-app.post("/spotify/addTracksToPlaylist", (req, res) => {
+router.post("/addTracksToPlaylist", (req, res) => {
   const tracks = req.body.tracks;
   const id = req.body.playlistId;
   const accessToken = req.body.accessToken;
@@ -174,12 +172,11 @@ app.post("/spotify/addTracksToPlaylist", (req, res) => {
   );
 });
 
-app.post("/spotify/UpdatePlaylistItems", (req, res) => {
+router.post("/UpdatePlaylistItems", (req, res) => {
   const tracks = req.body.tracks; // tracks uris
   const id = req.body.playlistId;
   const accessToken = req.body.accessToken;
   let url = `${process.env.SPOTIFY_API}/playlists/${id}/tracks?uris=${tracks}`;
-  console.log(url);
   fetch(url, {
     method: "PUT",
     headers: {
@@ -191,15 +188,12 @@ app.post("/spotify/UpdatePlaylistItems", (req, res) => {
       console.log(data);
       res.json(data);
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(404);
-    });
+    .catch((err) => console.log(err));
 });
 
 //!SECTION - search
 
-app.post("/spotify/search", (req, res) => {
+router.post("/search", (req, res) => {
   const accessToken = req.body.accessToken;
   const keyword = req.body.keyword;
   const offset = req.body.offset;
@@ -215,4 +209,5 @@ app.post("/spotify/search", (req, res) => {
     }
   );
 });
-app.listen(5174);
+
+export default router;
