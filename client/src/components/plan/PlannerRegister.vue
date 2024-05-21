@@ -1,30 +1,59 @@
 <template>
-    <div class="w-100 " style="margin-top: 10%; display: flex; justify-content: flex-start; gap: 20px;overflow-y: hidden; align-items: baseline">
+  <div
+    class="w-100"
+    style="
+      margin-top: 10%;
+      display: flex;
+      justify-content: flex-start;
+      gap: 20px;
+      overflow-y: hidden;
+      align-items: baseline;
+    "
+  >
       <!-- <PlannerChat/> -->
       <div class="col">
-        <div class="row justify-content-center">
-          <div class="col-md-3 text-center">
-            <button class="btn btn-secondary btn-sm" type="button" @click="goToPlannerList">
-              나의 여행계획 보기
-            </button>
-          </div>
-          <div class="col-md-3 text-center">
-            <VSelect :selectOption="sidoList" :defaultValue="'검색 할 지역 선택'" :classGroup="classGroup"
-              @on-key-select="selectSido" />
-          </div>
-          <div class="col-md-3 text-center">
-            <VSelect :selectOption="typeList" :defaultValue="'관광지 유형'" :classGroup="classGroup"
-              @on-key-select="selectType" />
-          </div>
-          <div class="col-md-3 mb-3 text-center d-flex col">
-            <input id="search-keyword" class="form-control mr-2" type="search" name="search-keyword"
-              placeholder="검색어" aria-label="검색어" v-model="searchItem.title" />
-            <button class="btn btn-primary btn-sm" id="btn-search" style="white-space: nowrap; margin-left: 5%"
-                @click="search">
-              검색
-            </button>
-          </div>
+      <div class="row justify-content-center">
+        <div class="col-md-3 text-center">
+          <button class="btn btn-secondary btn-sm" type="button" @click="goToPlannerList">
+            나의 여행계획 보기
+          </button>
         </div>
+        <div class="col-md-3 text-center">
+          <VSelect
+            :selectOption="sidoList"
+            :defaultValue="'검색 할 지역 선택'"
+            :classGroup="classGroup"
+            @on-key-select="selectSido"
+          />
+        </div>
+        <div class="col-md-3 text-center">
+          <VSelect
+            :selectOption="typeList"
+            :defaultValue="'관광지 유형'"
+            :classGroup="classGroup"
+            @on-key-select="selectType"
+          />
+        </div>
+        <div class="col-md-3 mb-3 text-center d-flex col">
+          <input
+            id="search-keyword"
+            class="form-control mr-2"
+            type="search"
+            name="search-keyword"
+            placeholder="검색어"
+            aria-label="검색어"
+            v-model="searchItem.title"
+          />
+          <button
+            class="btn btn-primary btn-sm"
+            id="btn-search"
+            style="white-space: nowrap; margin-left: 5%"
+            @click="search"
+          >
+            검색
+          </button>
+        </div>
+      </div>
         <PlannerMaker :places="places" @submit-plan="handlePlanSubmission" />
           <!-- 초대 테스트 버튼 -->
           <!-- <button class="btn btn-primary" @click="inviteMember('3')">초대하기</button> -->

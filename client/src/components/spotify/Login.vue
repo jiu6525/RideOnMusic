@@ -1,7 +1,6 @@
 <script setup>
 const { VITE_AUTH_URL } = import.meta.env;
 const { VITE_NODE_EXPRESS_URI } = import.meta.env.VITE_NODE_EXPRESS_URI
-
 </script>
 
 <template>
@@ -11,5 +10,4 @@ const { VITE_NODE_EXPRESS_URI } = import.meta.env.VITE_NODE_EXPRESS_URI
   </div>
 </template>
 <style scoped>
-
 </style>

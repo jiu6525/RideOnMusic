@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 import SpotifyWebApi from "spotify-web-api-node";
 import store from "@/stores";
 import axios from "axios";
-const { VITE_NODE_EXPRESS_URI } = import.meta.env
+const { VITE_NODE_EXPRESS_URI } = import.meta.env;
 
 export const useSearchStore = defineStore(
   "search",
@@ -13,14 +13,14 @@ export const useSearchStore = defineStore(
     const nextPageUrl = ref(null);
     const playingTrack = ref(null);
     const tokenStore = store.useTokenStore();
-    const limit = 10
+    const limit = 10;
 
     const searchTracks = async (query, offset) => {
       axios
-        .post(`${VITE_NODE_EXPRESS_URI}/search`, {
+        .post(`${VITE_NODE_EXPRESS_URI}/spotify/search`, {
           accessToken: tokenStore.accessToken,
           keyword: query,
-          offset: offset
+          offset: offset,
         })
         .then((res) => {
           // console.log(res.data);
@@ -39,10 +39,8 @@ export const useSearchStore = defineStore(
         })
         .catch((error) => {
           console.log(error);
-        })
+        });
     };
-
-
 
     return {
       searchQuery,
@@ -50,7 +48,6 @@ export const useSearchStore = defineStore(
       nextPageUrl,
       playingTrack,
       searchTracks,
-
     };
   },
   {

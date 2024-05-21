@@ -17,6 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "openai": "^4.47.1",
     "query-string": "^9.0.0",
     "spotify-web-api-node": "^5.0.2"
   },

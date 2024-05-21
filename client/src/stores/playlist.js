@@ -1,23 +1,23 @@
 import { ref } from "vue";
 import { defineStore, storeToRefs } from "pinia";
 import axios from "axios";
-import store from "@/stores"
+import store from "@/stores";
 
 // import api from "@/api";
-const { VITE_NODE_EXPRESS_URI } = import.meta.env
+const { VITE_NODE_EXPRESS_URI } = import.meta.env;
 export const usePlaylistStore = defineStore(
   "playlist",
   () => {
     const tokenStore = store.useTokenStore();
     const trackStore = store.useTrackStore();
-    const { savedTracks } = storeToRefs(trackStore)
+    const { savedTracks } = storeToRefs(trackStore);
     const playlist = ref(null);
-    const hasPlaylist = ref(false)
-    const planPlaylistId = ref('0ZmyzpJEduaoUy4dVZMbj6')
+    const hasPlaylist = ref(false);
+    const planPlaylistId = ref(null);
 
     const createPlaylist = async (name, desc) => {
       axios
-        .post(`${VITE_NODE_EXPRESS_URI}/createPlaylist`, {
+        .post(`${VITE_NODE_EXPRESS_URI}/spotify/createPlaylist`, {
           accessToken: tokenStore.accessToken,
           name: name,
           description: desc,
@@ -31,10 +31,10 @@ export const usePlaylistStore = defineStore(
             tracks: [],
             uri: res.data.uri,
             description: res.data.description,
-          }
-          planPlaylistId.value = res.data.id
+          };
+          planPlaylistId.value = res.data.id;
           savedTracks.value = [];
-          hasPlaylist.value = true
+          hasPlaylist.value = true;
           // console.log(res.data);
           // router.push("/");
         })
@@ -46,13 +46,13 @@ export const usePlaylistStore = defineStore(
 
     const getPlaylist = async () => {
       axios
-        .post(`${VITE_NODE_EXPRESS_URI}/getPlaylist`, {
+        .post(`${VITE_NODE_EXPRESS_URI}/spotify/getPlaylist`, {
           accessToken: tokenStore.accessToken,
           // playlistId: "3cEYpjA9oz9GiPac4AsH4n",
           playlistId: planPlaylistId.value,
         })
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data);
           playlist.value = {
             playlistId: res.data.id,
             name: res.data.name,
@@ -65,10 +65,10 @@ export const usePlaylistStore = defineStore(
                 if (image.height < smallest.height) return image;
                 return smallest;
               }, item.track.album.images[0]).url,
-            }))
-          }
-          savedTracks.value = playlist.value.track
-          hasPlaylist.value = true
+            })),
+          };
+          savedTracks.value = playlist.value.track;
+          hasPlaylist.value = true;
         })
         .catch((error) => {
           console.log(error);
@@ -77,7 +77,7 @@ export const usePlaylistStore = defineStore(
     };
     const removetracks = async (traks) => {
       axios
-        .post(`${VITE_NODE_EXPRESS_URI}/removetrack`, {
+        .post(`${VITE_NODE_EXPRESS_URI}/spotify/removetrack`, {
           accessToken: tokenStore.accessToken,
           // playlistId: "3cEYpjA9oz9GiPac4AsH4n",
           track: [],
@@ -100,7 +100,7 @@ export const usePlaylistStore = defineStore(
       let arr = [];
       arr.push(uris);
       axios
-        .post(`${VITE_NODE_EXPRESS_URI}/addTracksToPlaylist`, {
+        .post(`${VITE_NODE_EXPRESS_URI}/spotify/addTracksToPlaylist`, {
           accessToken: tokenStore.accessToken,
           playlistId: planPlaylistId.value,
           tracks: arr,
@@ -116,31 +116,34 @@ export const usePlaylistStore = defineStore(
         });
     };
     const savePlaylist = async () => {
-
+      // console.log(planPlaylistId.value);
       axios
-        .post(`${VITE_NODE_EXPRESS_URI}/UpdatePlaylistItems`, {
+        .post(`${VITE_NODE_EXPRESS_URI}/spotify/UpdatePlaylistItems`, {
           accessToken: tokenStore.accessToken,
           playlistId: planPlaylistId.value,
-          tracks: savedTracks.value.map(track => track.uri).join(",")
+          tracks: savedTracks.value.map((track) => track.uri).join(","),
         })
         .then((res) => {
-          console.log(res.data);
-          playlist.value.tracks = savedTracks.value
-          playlist.value.snapshot_id = res.data.snapshot_id
+          // console.log(res.data.snapshot_id);
+          playlist.value.tracks = savedTracks.value;
+          playlist.value.snapshot_id = res.data.snapshot_id;
         })
         .catch((error) => {
           console.log(error);
+          playlist.value.snapshot_id = null;
+          return null;
           // router.push("/");
         });
-    }
+    };
     return {
       playlist,
       hasPlaylist,
+      planPlaylistId,
       createPlaylist,
       getPlaylist,
       addtracks,
       removetracks,
-      savePlaylist
+      savePlaylist,
     };
   },
   {
