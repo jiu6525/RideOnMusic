@@ -11,7 +11,7 @@
 </ol>
 <br>
 <h2>Database ERD</h2>
-
+![ROM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/c3c740dc-820a-48d7-a68f-5061a5a46ab7/77cf6cda-2656-41a0-bf4c-5096e6a28c24/ROM.png)
 <h2>기술 스택</h2>
 <ol>
 <li>JAVA 17</li>
